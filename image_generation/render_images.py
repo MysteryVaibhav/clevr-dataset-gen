@@ -89,6 +89,8 @@ parser.add_argument('--start_idx', default=0, type=int,
          "multiple machines and recombine the results later.")
 parser.add_argument('--num_images', default=5, type=int,
     help="The number of images to render")
+parser.add_argument('--del_images', default=0, type=int,
+    help="0/1: whether to render two copies of the images with an object removed")
 parser.add_argument('--filename_prefix', default='CLEVR',
     help="This prefix will be prepended to the rendered images and JSON scenes")
 parser.add_argument('--split', default='new',
@@ -260,6 +262,16 @@ def render_scene(args,
       'directions': {},
   }
 
+  if args.del_images == 1:
+    del_output_image = output_image.replace(".png", "") + "_del.png"
+    scene_struct_del = {
+      'split': output_split,
+      'image_index': output_index,
+      'image_filename': os.path.basename(del_output_image),
+      'objects': [],
+      'directions': {},
+    }
+
   # Put a plane on the ground so we can compute cardinal directions
   bpy.ops.mesh.primitive_plane_add(radius=5)
   plane = bpy.context.object
@@ -295,6 +307,14 @@ def render_scene(args,
   scene_struct['directions']['above'] = tuple(plane_up)
   scene_struct['directions']['below'] = tuple(-plane_up)
 
+  if args.del_images == 1:
+    scene_struct_del['directions']['behind'] = tuple(plane_behind)
+    scene_struct_del['directions']['front'] = tuple(-plane_behind)
+    scene_struct_del['directions']['left'] = tuple(plane_left)
+    scene_struct_del['directions']['right'] = tuple(-plane_left)
+    scene_struct_del['directions']['above'] = tuple(plane_up)
+    scene_struct_del['directions']['below'] = tuple(-plane_up)
+
   # Add random jitter to lamp positions
   if args.key_light_jitter > 0:
     for i in range(3):
@@ -312,12 +332,29 @@ def render_scene(args,
   # Render the scene and dump the scene data structure
   scene_struct['objects'] = objects
   scene_struct['relationships'] = compute_all_relationships(scene_struct)
+
+  if args.del_images == 1:
+    # Leave out the last object for the del copy
+    scene_struct_del['objects'] = objects[:-1]
+    scene_struct_del['relationships'] = compute_all_relationships(scene_struct)
+
   while True:
     try:
       bpy.ops.render.render(write_still=True)
       break
     except Exception as e:
       print(e)
+
+  if args.del_images == 1:
+    render_args.filepath = del_output_image
+    # Remove last object
+    utils.delete_object(blender_objects[-1])
+    while True:
+      try:
+        bpy.ops.render.render(write_still=True)
+        break
+      except Exception as e:
+        print(e)
 
   with open(output_scene, 'w') as f:
     json.dump(scene_struct, f, indent=2)
