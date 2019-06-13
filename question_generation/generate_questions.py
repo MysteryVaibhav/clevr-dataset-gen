@@ -701,14 +701,14 @@ def main(args):
       diffs.append({
         'image_filename': scene_fn,
         'image_filename_deleted_diff': diff_scene_fn,
-        'image_index': image_index,
+        'image_index': int(os.path.splitext(scene_fn)[0].split('_')[-1]),
         'difference': diff
       })
     with open(args.output_del_diff_file, 'w') as f:
       print('Writing output to %s' % args.output_del_diff_file)
       json.dump({
         'info': scene_info,
-        'questions': diffs,
+        'differences': diffs,
       }, f)
 
 
