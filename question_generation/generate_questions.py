@@ -60,6 +60,10 @@ parser.add_argument('--output_questions_file',
     default='../output/CLEVR_questions.json',
     help="The output file to write containing generated questions")
 
+parser.add_argument('--output_del_diff_file',
+    default='../output/CLEVR_del_diff.json',
+    help="The output file to write containing generated differences")
+
 # Control which and how many images to process
 parser.add_argument('--scene_start_idx', default=0, type=int,
     help="The image at which to start generating questions; this allows " +
@@ -76,6 +80,8 @@ parser.add_argument('--templates_per_image', default=10, type=int,
          "on each image")
 parser.add_argument('--instances_per_template', default=1, type=int,
     help="The number of times each template should be instantiated on an image")
+parser.add_argument('--del_images', default=0, type=int,
+    help="0/1: whether to render two copies of the images with an object removed")
 
 # Misc
 parser.add_argument('--reset_counts_every', default=250, type=int,
@@ -682,6 +688,27 @@ def main(args):
     json.dump({
         'info': scene_info,
         'questions': questions,
+      }, f)
+
+  if args.del_images == 1:
+    diffs = []
+    for i, scene in enumerate(all_scenes):
+      scene_fn = scene['image_filename']
+      diff_scene_fn = scene_fn.replace(".png", "") + "_del.png"
+      deleted_obj = scene['objects'][-1]
+      diff = "The {} {} {} made of {} is missing".format(deleted_obj['size'], deleted_obj['color'], deleted_obj['shape'],
+                                                         deleted_obj['material'])
+      diffs.append({
+        'image_filename': scene_fn,
+        'image_filename_deleted_diff': diff_scene_fn,
+        'image_index': image_index,
+        'difference': diff
+      })
+    with open(args.output_del_diff_file, 'w') as f:
+      print('Writing output to %s' % args.output_del_diff_file)
+      json.dump({
+        'info': scene_info,
+        'questions': diffs,
       }, f)
 
 
