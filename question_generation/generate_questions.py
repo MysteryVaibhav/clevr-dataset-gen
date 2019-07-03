@@ -702,7 +702,12 @@ def main(args):
         'image_filename': scene_fn,
         'image_filename_deleted_diff': diff_scene_fn,
         'image_index': int(os.path.splitext(scene_fn)[0].split('_')[-1]),
-        'difference': diff
+        'difference': diff,
+        'size': deleted_obj['size'],
+        'color': deleted_obj['color'],
+        'shape': deleted_obj['shape'],
+        'location': {'pixel_coords': deleted_obj['pixel_coords'], '3d_coords': deleted_obj['3d_coords'],
+                     'rotation': deleted_obj['rotation']}
       })
     with open(args.output_del_diff_file, 'w') as f:
       print('Writing output to %s' % args.output_del_diff_file)
