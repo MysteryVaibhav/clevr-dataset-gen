@@ -703,9 +703,9 @@ def main(args):
         'image_filename_deleted_diff': diff_scene_fn,
         'image_index': int(os.path.splitext(scene_fn)[0].split('_')[-1]),
         'difference': diff,
-        'size': deleted_obj['size'],
-        'color': deleted_obj['color'],
-        'shape': deleted_obj['shape'],
+        'difference_type': 'deleted',
+        'attributes': {'size': deleted_obj['size'], 'color': deleted_obj['color'], 'shape': deleted_obj['shape'],
+                       'material': deleted_obj['material']},
         'location': {'pixel_coords': deleted_obj['pixel_coords'], '3d_coords': deleted_obj['3d_coords'],
                      'rotation': deleted_obj['rotation']}
       })
