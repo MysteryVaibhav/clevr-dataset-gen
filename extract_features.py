@@ -9,6 +9,7 @@ import torchvision
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--input_image_dir', required=True)
+parser.add_argument('--type', default='', type=str, help='del/add for modified image feature extraction')
 parser.add_argument('--max_images', default=None, type=int)
 parser.add_argument('--output_h5_file', required=True)
 
@@ -61,8 +62,14 @@ def main(args):
   idx_set = set()
   for fn in os.listdir(args.input_image_dir):
     if not fn.endswith('.png'): continue
+    original_fn = fn
+    if args.type == '':
+        if 'del' in fn or 'add' in fn: continue
+    else:
+        if args.type not in fn: continue
+        fn = fn.replace('_' + args.type, '')
     idx = int(os.path.splitext(fn)[0].split('_')[-1])
-    input_paths.append((os.path.join(args.input_image_dir, fn), idx))
+    input_paths.append((os.path.join(args.input_image_dir, original_fn), idx))
     idx_set.add(idx)
   input_paths.sort(key=lambda x: x[1])
   assert len(idx_set) == len(input_paths)
