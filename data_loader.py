@@ -6,12 +6,11 @@ import json
 
 class ClevrDiffDataSet(torch.utils.data.TensorDataset):
     def __init__(self, diff_desc_file, image_features_file, diff_image_features_file, image_feature_dimension, num_image_regions):
-        super(ClevrDiffDataSet, self).__init__()
         self.diff_json = json.load(open(diff_desc_file, 'r'))['differences']
         self.image_feat_dim = image_feature_dimension
         self.image_regions = num_image_regions
-        self.image_features = h5py.File(image_features_file, 'r')
-        self.diff_image_features = h5py.File(diff_image_features_file, 'r')
+        self.image_features = h5py.File(image_features_file, 'r')['features']
+        self.diff_image_features = h5py.File(diff_image_features_file, 'r')['features']
         self.num_of_samples = len(self.image_features)
         # Mapping from attributes to vectors
         self.shapes_label_map = {'cube': 0, 'sphere': 1, 'cylinder': 2}
@@ -39,7 +38,7 @@ class ClevrDiffDataSet(torch.utils.data.TensorDataset):
         image = self.image_features[idx].reshape(self.image_feat_dim, self.image_regions).T
         diff_image = self.diff_image_features[idx].reshape(self.image_feat_dim, self.image_regions).T
         diff = self.get_diff_vector(self.diff_json[idx]['attributes'])
-        return to_tensor(image), to_tensor(diff_image), to_tensor(diff).long()
+        return to_tensor(image), to_tensor(diff_image), diff
 
 
 class DataLoader:

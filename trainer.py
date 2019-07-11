@@ -43,12 +43,10 @@ class Trainer:
                 start_time = timer()
                 num_of_mini_batches = len(self.data_loader.training_data_loader) // self.params.batch_size
                 for img, img_feat, label in tqdm(self.data_loader.training_data_loader):
-
                     model.train()
                     optimizer.zero_grad()
                     # forward pass.
                     logits = model(to_variable(img), to_variable(img_feat))
-
                     # Compute the loss, gradients, and update the parameters by calling optimizer.step()
                     loss = loss_function(logits, to_variable(label))
                     loss.backward()

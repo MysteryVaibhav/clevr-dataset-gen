@@ -12,7 +12,7 @@ def parse_arguments():
     parser.add_argument("--train_img_feats", dest="train_img_feats", type=str,
                         default='output_500/train_image_feats.h5')
     parser.add_argument("--dev_img_feats", dest="dev_img_feats", type=str,
-                        default='output_100/dev_image_feats.h5')
+                        default="output_100/dev_image_feats.h5")
     parser.add_argument("--test_img_feats", dest="test_img_feats", type=str,
                         default='output_200/test_image_feats.h5')
     parser.add_argument("--train_diff_img_feats", dest="train_diff_img_feats", type=str,
@@ -21,10 +21,10 @@ def parse_arguments():
                         default='output_100/dev_del_image_feats.h5')
     parser.add_argument("--test_diff_img_feats", dest="test_diff_img_feats", type=str,
                         default='output_200/test_del_image_feats.h5')
-    parser.add_argument("--train_diff", dest="train_diff", types=str, default='output_500/CLEVR_del_diff.json')
-    parser.add_argument("--test_diff", dest="test_diff", types=str, default='output_200/CLEVR_del_diff.json')
-    parser.add_argument("--dev_diff", dest="dev_diff", types=str, default='output_100/CLEVR_del_diff.json')
-    parser.add_argument("--diff_types", dest="diff_types", types=str, default='del')
+    parser.add_argument("--train_diff", dest="train_diff", type=str, default='output_500/CLEVR_del_diff.json')
+    parser.add_argument("--test_diff", dest="test_diff", type=str, default='output_200/CLEVR_del_diff.json')
+    parser.add_argument("--dev_diff", dest="dev_diff", type=str, default='output_100/CLEVR_del_diff.json')
+    parser.add_argument("--diff_types", dest="diff_types", type=str, default='del')
 
     parser.add_argument("--hidden_dimension", dest="hidden_dimension", type=int, default=512)
     parser.add_argument("--embedding_dimension", dest="embedding_dimension", type=int, default=512)

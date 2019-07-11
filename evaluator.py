@@ -28,8 +28,10 @@ class Evaluator:
             # forward pass.
             logits = model(to_variable(img), to_variable(img_feat))
             # Compute the loss, gradients, and update the parameters by calling optimizer.step()
-            loss = torch.nn.CrossEntropyLoss(logits, label)
-            hits += torch.sum(torch.argmax(logits, dim=1) == label).item()
+            loss_fn = torch.nn.CrossEntropyLoss()
+            loss = loss_fn(logits, label)
+            _, argmax = torch.max(logits, dim=1)
+            hits += torch.sum(argmax == label).data.cpu().numpy()
             losses.append(loss.data.cpu().numpy())
             total += len(img)
 
