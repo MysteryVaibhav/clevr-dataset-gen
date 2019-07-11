@@ -1,14 +1,15 @@
 # CLEVR Diff Dataset
 
+## Dataset Generation
 Code to generate pairs of CLEVR style images with an obvious difference.
 
 You can use this code to render pairs of synthetic images and difference for those images, like this:
 
 <div align="left">
-  <img src="images/CLEVR_new_000000.png" width="400px">
+  <img src="images/CLEVR_new_000000.png" width="300px">
 </div>
 <div align="right">
-  <img src="images/CLEVR_new_000000_del.png" width="400px">
+  <img src="images/CLEVR_new_000000_del.png" width="300px">
 </div>
 
 For the above example, generated difference,
@@ -52,3 +53,22 @@ python generate_questions.py --del_images 1
 ```
 
 Refer to [CLEVR Dataset Generation repo](https://github.com/facebookresearch/clevr-dataset-gen/blob/master/README.md) for setting up blender and learning more about the code.
+
+## Feature Extraction
+Extract ResNet-101 features.
+
+To extract the features for the generated image,
+```
+python extract_features.py --input_image_dir output_500/images/ --output_h5_file output_500/train_image_feats.h5 --batch_size 32
+python extract_features.py --input_image_dir output_100/images/ --output_h5_file output_100/dev_image_feats.h5 --batch_size 32
+python extract_features.py --input_image_dir output_200/images/ --output_h5_file output_200/test_image_feats.h5 --batch_size 32
+```
+
+To extract the features for the generated image with a difference,
+```
+python extract_features.py --input_image_dir output_500/images/ --output_h5_file output_500/train_image_feats.h5 --batch_size 32 --type del
+python extract_features.py --input_image_dir output_100/images/ --output_h5_file output_100/dev_image_feats.h5 --batch_size 32 --type del
+python extract_features.py --input_image_dir output_200/images/ --output_h5_file output_200/test_image_feats.h5 --batch_size 32 --type del
+```
+
+## Baseline Model
