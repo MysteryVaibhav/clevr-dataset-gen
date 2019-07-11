@@ -6,10 +6,10 @@ Code to generate pairs of CLEVR style images with an obvious difference.
 You can use this code to render pairs of synthetic images and difference for those images, like this:
 
 <div align="left">
-  <img src="images/CLEVR_new_000000.png" width="300px">
+  <img src="images/CLEVR_new_000000.png" width="400px">
 </div>
 <div align="right">
-  <img src="images/CLEVR_new_000000_del.png" width="300px">
+  <img src="images/CLEVR_new_000000_del.png" width="400px">
 </div>
 
 For the above example, generated difference,
@@ -72,3 +72,11 @@ python extract_features.py --input_image_dir output_200/images/ --output_h5_file
 ```
 
 ## Baseline Model
+
+Currently, a very simple model is coded to identify the shape of the object which is different in the two images.
+
+To train and evaluate the model,
+```
+python main.py --mode 0                  # Train
+python main.py --mode 1                  # Test
+```
